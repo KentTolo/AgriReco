@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgroAI - Smart Farming Solutions</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      :root {
+        --primary-color: #1b4d3e;
+        --secondary-color: #e8f3dc;
+        --text-color: #2c3e50;
+      }
+
+      body {
+        line-height: 1.6;
+      }
+
+      /* Navigation */
+      .navbar {
+        background: var(--primary-color);
+        padding: 1rem 5%;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .logo {
+        color: white;
+        font-size: 1.5rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .nav-links a:hover {
+        color: var(--secondary-color);
+      }
+
+      .cta-button {
+        background: var(--secondary-color);
+        color: var(--primary-color);
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+      }
+
+      .cta-button:hover {
+        background: white;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: url("https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80")
+          center/cover fixed;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: white;
+        padding: 0 5%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Add these new styles right after the .hero style */
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at center,
+          rgba(27, 77, 62, 0.6) 0%,
+          rgba(27, 77, 62, 0.8) 100%
+        );
+        z-index: 1;
+      }
+
+      .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 5rem 5%;
+        background: white;
+      }
+
+      .section-title {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 3rem;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .feature-card {
+        background: var(--secondary-color);
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: transform 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* About Section */
+      .about {
+        padding: 8rem 5% 5rem;
+        background: #f9f9f9;
+      }
+
+      /* Add this to your CSS */
+      .about {
+        background: linear-gradient(
+            rgba(249, 249, 249, 0.9),
+            rgba(249, 249, 249, 0.9)
+          ),
+          url("https://images.unsplash.com/photo-1599466753062-5fc9ada7f908?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oh1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80")
+            center/cover fixed;
+      }
+
+      .cta-section {
+        background: linear-gradient(
+            rgba(27, 77, 62, 0.9),
+            rgba(27, 77, 62, 0.9)
+          ),
+          url("https://images.unsplash.com/photo-1589923188900-85e90f41a89e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80")
+            center/cover fixed;
+        position: relative;
+      }
+
+      .about-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+
+      .about-text {
+        color: var(--text-color);
+      }
+
+      .about-text h2 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+      }
+
+      .about-image {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .about-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .mission-values {
+        margin-top: 4rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .mission-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Contact Section */
+      .contact {
+        padding: 5rem 5%;
+        background: var(--secondary-color);
+      }
+
+      .contact-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+      }
+
+      .contact-info {
+        color: var(--text-color);
+      }
+
+      .contact-info h2 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+      }
+
+      .contact-details {
+        margin-top: 2rem;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+      }
+
+      .contact-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .form-group textarea {
+        height: 150px;
+        resize: vertical;
+      }
+
+      .submit-btn {
+        background: var(--primary-color);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+      }
+
+      .submit-btn:hover {
+        background: #2c735e;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        background: var(--primary-color);
+        color: white;
+        padding: 5rem 5%;
+        text-align: center;
+      }
+
+      .cta-content {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .cta-section h2 {
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-section .cta-button {
+        display: inline-block;
+        margin-top: 1.5rem;
+        font-size: 1.1rem;
+      }
+
+      /* Footer */
+      footer {
+        background: #1a1a1a;
+        color: white;
+        padding: 3rem 5%;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+
+      .footer-section h3 {
+        margin-bottom: 1rem;
+      }
+
+      .footer-section ul {
+        list-style: none;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-section a {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .footer-section a:hover {
+        color: var(--secondary-color);
+      }
+
+      .copyright {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Success Message */
+      .success-message {
+        display: none;
+        background: #4caf50;
+        color: white;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .about-content,
+        .contact-content {
+          grid-template-columns: 1fr;
+        }
+
+        .about-image {
+          order: -1;
+        }
+
+        /* Add these to your CSS */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .hero-content,
+        .feature-card,
+        .about-content,
+        .contact-content {
+          animation: fadeIn 1s ease-out;
+        }
+
+        .feature-card {
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-content">
+        <a href="#" class="logo">🌱 AgroAI</a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+          <a href="login.html" class="cta-button">Login</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Smart Farming for a Better Tomorrow</h1>
+        <p style="color: rgb(255, 132, 0)">
+          Revolutionise your agricultural practices with AI-powered insights and
+          real-time monitoring
+        </p>
+
+        <a href="login.html" class="cta-button">Get Started</a>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <h2 class="section-title">Why Choose AgroAI?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Precision Agriculture</h3>
+          <p>
+            Optimise your crop yield with AI-driven recommendations and precise
+            monitoring.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Real-time Analytics</h3>
+          <p>
+            Monitor soil conditions, weather patterns, and crop health in
+            real-time.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌱</div>
+          <h3>Smart Recommendations</h3>
+          <p>
+            Get personalised crop recommendations based on your field
+            conditions.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Mobile Access</h3>
+          <p>
+            Access your farm data anytime, anywhere through our mobile-friendly
+            platform.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-content">
+        <div class="about-text">
+          <h2>Empowering Lesotho's Farmers</h2>
+          <p>
+            AgroAI is a final year computer science project at the National
+            University of Lesotho, designed to revolutionise farming practices
+            across the country. We combine Artificial Intelligence(AI) and
+            Internet of Things (IoT) technology to help local farmers maximize
+            their yields and improve their livelihoods.
+          </p>
+
+          <div class="mission-values">
+            <div class="mission-card">
+              <h3>Our Mission</h3>
+              <p>
+                To empower Lesotho's agricultural community with smart farming
+                solutions that increase productivity and sustainability.
+              </p>
+            </div>
+            <div class="mission-card">
+              <h3>Our Impact</h3>
+              <p>
+                Working with local farmers to implement AI-driven solutions that
+                address Lesotho's unique agricultural challenges.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="about-image">
+          <img src="landscape.jpg" alt="Lesotho farming landscape" />
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="contact-content">
+        <div class="contact-info">
+          <h2>Get in Touch</h2>
+          <p>
+            Have questions about AgroAI? We're here to help! Reach out to our
+            team for support or to learn more about implementing smart farming
+            solutions.
+          </p>
+
+          <div class="contact-details">
+            <div class="contact-item">
+              <span>📍</span>
+              <p>National University of Lesotho, Roma Campus</p>
+            </div>
+            <div class="contact-item">
+              <span>📧</span>
+              <p>contact@agroai.edu.ls</p>
+            </div>
+            <div class="contact-item">
+              <span>📱</span>
+              <p>+266 2234 0000</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Message</button>
+          <div class="success-message" id="successMessage">
+            Thank you for your message! We'll get back to you soon.
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="cta-content">
+        <h2>Ready to Transform Your Farming?</h2>
+        <p>
+          Join thousands of farmers who are already using AgroAI to improve
+          their crop yield and farming efficiency.
+        </p>
+        <a href="login.html" class="cta-button">Start Free Trial</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#careers">Careers</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#guides">Guides</a></li>
+            <li><a href="#support">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><a href="#terms">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 AgroAI. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Contact Form Handling
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // In a real application, you would send the form data to a server here
+          // For this demo, we'll just show a success message
+          document.getElementById("successMessage").style.display = "block";
+
+          // Reset form
+          this.reset();
+
+          // Hide success message after 5 seconds
+          setTimeout(() => {
+            document.getElementById("successMessage").style.display = "none";
+          }, 5000);
+        });
+
+      // Add scroll reveal effect
+      window.addEventListener("scroll", function () {
+        const elements = document.querySelectorAll(
+          ".feature-card, .about-content, .contact-content"
+        );
+        elements.forEach((element) => {
+          const position = element.getBoundingClientRect();
+          // If element is in viewport
+          if (position.top < window.innerHeight && position.bottom >= 0) {
+            element.style.opacity = "1";
+            element.style.transform = "translateY(0)";
+          }
+        });
+      });
+
+      // Initialize elements as hidden
+      document.addEventListener("DOMContentLoaded", function () {
+        const elements = document.querySelectorAll(
+          ".feature-card, .about-content, .contact-content"
+        );
+        elements.forEach((element) => {
+          element.style.opacity = "0";
+          element.style.transform = "translateY(20px)";
+          element.style.transition =
+            "opacity 0.6s ease-out, transform 0.6s ease-out";
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    />
+    <link rel="stylesheet" href="main_styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <title>AgroAI Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Side Bar Section -->
+
+      <aside class="sidebar">
+        <div class="logo">🌱AgroAI</div>
+        <ul class="nav-menu">
+          <li class="nav-item" onclick="setActiveTab('overview')">Overview</li>
+          <li class="nav-item" onclick="setActiveTab('fields')">
+            Recommendations
+          </li>
+          <li class="nav-item" onclick="setActiveTab('sensors')">Sensors</li>
+          <li class="nav-item" onclick="setActiveTab('analytics')">
+            Analytics
+          </li>
+          <li class="nav-item" onclick="setActiveTab('trackCrop')">
+            Track Crop
+          </li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <!-- Header Section -->
+        <header class="header">
+          <div class="search-bar">
+            <select id="fieldSelect" class="dropdown">
+              <option value="">Select a field</option>
+              <option value="National University of Lesotho">
+                National University of Lesotho
+              </option>
+              <option value="Lerotholi Polytechnic">
+                Lerotholi Polytechnic
+              </option>
+              <option value="Agriculture College">Agriculture College</option>
+            </select>
+          </div>
+          <!-- In the header section -->
+          <!-- Replace the existing user-profile div with this -->
+          <div class="user-profile">
+            <div class="user-avatar"></div>
+            <div class="user-info">
+              <span id="username">Loading...</span>
+              <button onclick="logout()" class="logout-btn">Log Out</button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-area">
+          <section class="progress-section">
+            <h2>Weekly progress</h2>
+            <div class="progress-cards">
+              <div class="progress-card">
+                <div class="progress-icon">🥭</div>
+                <h3>Mango</h3>
+                <p>45% Growth</p>
+              </div>
+              <div class="progress-card light">
+                <div class="progress-icon">🍐</div>
+                <h3>Pear</h3>
+                <p>55% Growth</p>
+              </div>
+              <div class="progress-card">
+                <div class="progress-icon">🥑</div>
+                <h3>Avocado</h3>
+                <p>94% Growth</p>
+              </div>
+              <div class="progress-card light">
+                <div class="progress-icon">🥕</div>
+                <h3>Carrot</h3>
+                <p>82% Growth</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="charts-grid">
+            <div class="chart-container">
+              <h3>Predictive analysis</h3>
+              <canvas id="growthChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>It's the perfect day for spraying</h3>
+              <div class="progress-cards">
+                <div class="progress-card">
+                  <span id="soil-temperature">--°C</span>
+                  <small>real-time soil temperature</small>
+                </div>
+                <div class="progress-card">
+                  <span id="soil-ph">pH --</span>
+                  <small>real-time soil pH</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <span id="air-quality" class="metric-value">--%</span>
+                  <div>
+                    <h4>Air quality</h4>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <span id="soil-moisture" class="metric-value">--%</span>
+                  <div>
+                    <h4>Soil Moisture</h4>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <span id="land-fertility" class="metric-value">--%</span>
+                  <div>
+                    <h4>Land Fertility</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommendation Section -->
+        <div id="fields" class="content-area">
+          <div class="field-form">
+            <form id="fieldForm">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Field Name*</label>
+                  <input type="text" name="fieldName" id="fieldName" required />
+                  <label>Location (GPS)*</label>
+                  <input
+                    type="text"
+                    name="location"
+                    id="fieldLocation"
+                    required
+                  />
+                  <label>Dimensions (meters)*</label>
+                  <div style="display: flex; gap: 0.5rem">
+                    <input
+                      type="number"
+                      name="length"
+                      id="fieldLength"
+                      placeholder="Length"
+                      required
+                    />
+                    <input
+                      type="number"
+                      name="width"
+                      id="fieldWidth"
+                      placeholder="Width"
+                      required
+                    />
+                  </div>
+                  <label>Temperature (°C)*</label>
+                  <input type="number" id="temperature" step="0.1" required />
+                  <label>Rainfall (mm)*</label>
+                  <input type="number" id="rainfall" min="0" required />
+                </div>
+                <div class="form-group">
+                  <label>Nitrogen (N)*</label>
+                  <input
+                    type="number"
+                    id="N"
+                    name="N"
+                    min="0"
+                    max="100"
+                    required
+                  />
+                  <label>Phosphorus (P)*</label>
+                  <input
+                    type="number"
+                    id="P"
+                    name="P"
+                    min="0"
+                    max="100"
+                    required
+                  />
+                  <label>Potassium (K)*</label>
+                  <input
+                    type="number"
+                    id="K"
+                    name="K"
+                    min="0"
+                    max="100"
+                    required
+                  />
+                  <label>Humidity (%)*</label>
+                  <input
+                    type="number"
+                    id="humidity"
+                    min="0"
+                    max="100"
+                    required
+                  />
+                  <label>Soil pH*</label>
+                  <input
+                    type="number"
+                    id="ph"
+                    step="0.1"
+                    min="0"
+                    max="14"
+                    required
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Provide recommendation
+              </button>
+            </form>
+          </div>
+
+          <div
+            id="recommendationSection"
+            class="recommendation-section"
+            style="display: none"
+          >
+            <h3>Crop Recommendation</h3>
+            <div class="recommendation-content">
+              <div class="recommended-crop" id="recommendedCrop"></div>
+              <div
+                class="recommendation-reason"
+                id="recommendationReason"
+              ></div>
+            </div>
+            <div class="survival-rate" id="survivalRate"></div>
+          </div>
+
+          <div class="compatibility-section">
+            <h3>Crop Compatibility Checker</h3>
+            <p>
+              Verify if your preferred crop is suitable for the current field
+              conditions.
+            </p>
+
+            <div class="compatibility-form">
+              <div class="compatibility-input-group">
+                <label for="cropInput">Enter your preferred crop:</label>
+                <input
+                  type="text"
+                  id="cropInput"
+                  class="compatibility-input"
+                  placeholder="e.g. tomatoes, wheat, maize"
+                />
+              </div>
+              <button
+                class="compatibility-btn"
+                onclick="checkCropCompatibility()"
+              >
+                Check Compatibility
+              </button>
+            </div>
+
+            <div id="compatibilityResult" class="compatibility-result">
+              <h4>Compatibility Analysis</h4>
+              <div class="feedback-content" id="feedbackContent"></div>
+              <div class="compatibility-score compatibility-high">
+                <span class="score-label">Compatibility Score:</span>
+                <div class="score-meter">
+                  <div class="score-fill"></div>
+                </div>
+                <span class="score-value" id="scoreValue">85%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="add-field-form">
+            <h3>Add New Field</h3>
+            <form id="addFieldForm">
+              <div class="form-group">
+                <label for="newFieldName">Field Name*</label>
+                <input type="text" id="newFieldName" required />
+              </div>
+              <div class="form-group">
+                <label for="newFieldLength">Length (meters)*</label>
+                <input type="number" id="newFieldLength" required />
+              </div>
+              <div class="form-group">
+                <label for="newFieldWidth">Width (meters)*</label>
+                <input type="number" id="newFieldWidth" required />
+              </div>
+              <div class="form-group">
+                <label for="newFieldLocation">Location*</label>
+                <input type="text" id="newFieldLocation" required />
+              </div>
+              <button type="submit" class="btn btn-primary">Add Field</button>
+            </form>
+          </div>
+
+          <div class="field-grid" id="fieldGrid"></div>
+        </div>
+
+        <!-- Sensors Section -->
+        <div id="sensors" class="content-area">
+          <div class="section">
+            <h2>Active Sensors Network</h2>
+            <div class="chart-container">
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <div class="sensor-reading">12</div>
+                  <div>
+                    <h4>Active Sensors</h4>
+                    <span class="small">All systems operational</span>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <div class="sensor-reading">98%</div>
+                  <div>
+                    <h4>Network Strength</h4>
+                    <span class="small">Strong connection</span>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <div class="sensor-reading">4h</div>
+                  <div>
+                    <h4>Last Update</h4>
+                    <span class="small">Auto-updates every 6h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-grid">
+              <div class="chart-container">
+                <h3>Sensor Deployment Map</h3>
+                <div id="map">
+                  <div id="map-loading">Loading map...</div>
+                </div>
+              </div>
+
+              <div class="chart-container">
+                <h3>Real-time Readings</h3>
+                <div class="metrics-grid">
+                  <div class="metric-card">
+                    <div id="real-time-temperature" class="sensor-reading">
+                      --°C
+                    </div>
+                    <span class="small">Temperature</span>
+                  </div>
+                  <div class="metric-card">
+                    <div id="real-time-humidity" class="sensor-reading">
+                      --%
+                    </div>
+                    <span class="small">Humidity</span>
+                  </div>
+                  <div class="metric-card">
+                    <div id="real-time-ph" class="sensor-reading">--</div>
+                    <span class="small">Soil pH</span>
+                  </div>
+                  <div class="metric-card">
+                    <div id="real-time-light" class="sensor-reading">
+                      -- lux
+                    </div>
+                    <span class="small">Light Intensity</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Section  -->
+        <div id="analytics" class="content-area">
+          <div class="section">
+            <h2>Crop Analytics Dashboard</h2>
+            <div class="charts-grid">
+              <div class="chart-container">
+                <h3>Yield Prediction</h3>
+                <div class="progress-cards">
+                  <div class="progress-card">
+                    <div class="progress-icon">📈</div>
+                    <div>
+                      <h4>Expected Yield</h4>
+                      <span class="metric-value">4.2</span>
+                      <span class="small">tons/hectare</span>
+                    </div>
+                  </div>
+                  <div class="progress-card light">
+                    <div class="progress-icon">📊</div>
+                    <div>
+                      <h4>YoY Growth</h4>
+                      <span class="metric-value">+15%</span>
+                      <span class="small">vs last season</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-container">
+                <h3>Resource Usage Analytics</h3>
+                <div class="metrics-grid">
+                  <div class="metric-card">
+                    <div class="metric-value">82%</div>
+                    <div>
+                      <h4>Water Efficiency</h4>
+                      <span class="small">Optimal usage</span>
+                    </div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="metric-value">75%</div>
+                    <div>
+                      <h4>Fertilizer Efficiency</h4>
+                      <span class="small">Room for improvement</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="chart-container">
+                <h3>Historical Performance</h3>
+                <div class="metrics-grid">
+                  <div class="metric-card">
+                    <div class="metric-value">3.8</div>
+                    <div>
+                      <h4>Previous Yield</h4>
+                      <span class="small">tons/hectare</span>
+                    </div>
+                  </div>
+
+                  <div class="metric-card">
+                    <div class="metric-value">89%</div>
+                    <div>
+                      <h4>Quality Score</h4>
+                      <span class="small">Grade A produce</span>
+                    </div>
+                  </div>
+
+                  <div class="metric-card">
+                    <div class="metric-value">92%</div>
+                    <div>
+                      <h4>Resource ROI</h4>
+                      <span class="small">Above target</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Track Crop Section -->
+        <div id="trackCrop" class="content-area">
+          <div class="track-crop-header">
+            <h2 id="trackCropTitle">Select a field to track crops</h2>
+            <div id="trackCropStatus" class="track-crop-status"></div>
+          </div>
+
+          <!-- Plantation Date Input -->
+          <div class="form-group">
+            <label>Plantation Date*</label>
+            <input type="date" id="plantationDate" required />
+          </div>
+
+          <!-- Start Tracking Button -->
+          <button id="startTracking" class="btn btn-primary">
+            Start Tracking
+          </button>
+          <button id="clearTracking" class="btn btn-secondary">
+            Clear Tracking
+          </button>
+
+          <div class="progress-section">
+            <h3>Growth Stages</h3>
+            <div class="progress-cards">
+              <div class="progress-card" id="plantingStage">
+                <div class="progress-icon">🌱</div>
+                <h4>Planting</h4>
+                <p>Select a field</p>
+              </div>
+              <div class="progress-card light" id="vegetativeStage">
+                <div class="progress-icon">🌿</div>
+                <h4>Vegetative</h4>
+                <p>Select a field</p>
+              </div>
+              <div class="progress-card" id="reproductiveStage">
+                <div class="progress-icon">🌾</div>
+                <h4>Reproductive</h4>
+                <p>Select a field</p>
+              </div>
+              <div class="progress-card light" id="maturityStage">
+                <div class="progress-icon">🏆</div>
+                <h4>Maturity</h4>
+                <p>Select a field</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h3>Crop Growth Timeline</h3>
+            <div class="timeline" id="cropTimeline">
+              <!-- Timeline items will be dynamically inserted here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- End of main content -->
+      </main>
+    </div>
+    <script src="main_script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  </body>
+</html>

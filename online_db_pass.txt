@@ -1,0 +1,8 @@
+agroai@Nul0._
+
+postgresql://postgres:agroai%40Nul0._@db.orrpihjleufxfbtpgfwr.supabase.co:5432/postgres
+
+psql -h db.orrpihjleufxfbtpgfwr.supabase.co -U postgres -d postgres 
+postgresql://postgres:[YOUR-PASSWORD]@db.orrpihjleufxfbtpgfwr.supabase.co:5432/postgres
+
+echo DATABASE_URL=postgresql://postgres:agroai%40Nul0._@db.orrpihjleufxfbtpgfwr.supabase.co:5432/postgres > .env

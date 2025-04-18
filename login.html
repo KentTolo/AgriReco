@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>AgroAI - Login/Signup</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      :root {
+        --primary-color: #1b4d3e;
+        --secondary-color: #e8f3dc;
+        --text-color: #2c3e50;
+        --error-color: #e74c3c;
+        --success-color: #2ecc71;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+            rgba(27, 77, 62, 0.9),
+            rgba(27, 77, 62, 0.9)
+          ),
+          url("https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3")
+            center/cover;
+        padding: 2rem;
+      }
+
+      .auth-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        animation: slideIn 0.5s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .form-group label {
+        color: var(--text-color);
+        font-weight: 500;
+      }
+
+      .form-group input {
+        padding: 0.75rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-color);
+      }
+
+      .auth-button {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .auth-button:hover {
+        background-color: #153d31;
+      }
+
+      .message {
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      .error-message {
+        color: var(--error-color);
+        display: none;
+      }
+
+      .success-message {
+        color: var(--success-color);
+        display: none;
+      }
+
+      .tabs {
+        display: flex;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .tab.active {
+        color: var(--primary-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--primary-color);
+      }
+
+      .tab:hover:not(.active) {
+        background-color: #f9f9f9;
+      }
+
+      .form-container {
+        display: none;
+      }
+
+      .form-container.active {
+        display: block;
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-color);
+        font-size: 0.9rem;
+      }
+
+      .auth-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="logo">🌱 AgroAI</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" id="loginTab">Login</div>
+        <div class="tab" id="signupTab">Sign Up</div>
+      </div>
+
+      <!-- Login Form -->
+      <div class="form-container active" id="loginForm">
+        <form class="auth-form">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              name="password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="auth-button">Log In</button>
+          <div id="loginErrorMessage" class="error-message message">
+            Invalid email or password
+          </div>
+        </form>
+
+        <div class="auth-footer">
+          <a href="#">Forgot your password?</a>
+        </div>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="form-container" id="signupForm">
+        <form class="auth-form">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email</label>
+            <input type="email" id="signupEmail" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input
+              type="password"
+              id="signupPassword"
+              name="password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+            />
+          </div>
+
+          <button type="submit" class="auth-button">Create Account</button>
+          <div id="signupErrorMessage" class="error-message message"></div>
+          <div id="signupSuccessMessage" class="success-message message">
+            Account created successfully!
+          </div>
+        </form>
+
+        <div class="auth-footer">
+          By signing up, you agree to our <a href="#">Terms of Service</a> and
+          <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:8000";
+      let isLoading = false;
+
+      // Tab switching
+      document
+        .getElementById("loginTab")
+        .addEventListener("click", () => toggleTabs("login"));
+      document
+        .getElementById("signupTab")
+        .addEventListener("click", () => toggleTabs("signup"));
+
+      function toggleTabs(activeTab) {
+        document.querySelectorAll(".tab, .form-container").forEach((el) => {
+          el.classList.remove("active");
+        });
+
+        document.getElementById(`${activeTab}Tab`).classList.add("active");
+        document.getElementById(`${activeTab}Form`).classList.add("active");
+      }
+
+      // Login handler
+      document
+        .querySelector("#loginForm form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (isLoading) return;
+
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+          const errorMessage = document.getElementById("loginErrorMessage");
+
+          try {
+            isLoading = true;
+            const { data, error } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            });
+
+            if (error) throw new Error(error.message);
+
+            localStorage.setItem("auth_token", data.session.access_token);
+            window.location.href = "PlayingAgroAI (3).html";
+          } catch (error) {
+            errorMessage.textContent = error.message;
+            errorMessage.style.display = "block";
+          } finally {
+            isLoading = false;
+          }
+        });
+
+      // Registration handler
+      document
+        .querySelector("#signupForm form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (isLoading) return;
+
+          const name = document.getElementById("signupName").value;
+          const email = document.getElementById("signupEmail").value;
+          const password = document.getElementById("signupPassword").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+          const errorMessage = document.getElementById("signupErrorMessage");
+          const successMessage = document.getElementById(
+            "signupSuccessMessage"
+          );
+
+          if (password !== confirmPassword) {
+            errorMessage.textContent = "Passwords do not match";
+            errorMessage.style.display = "block";
+            return;
+          }
+
+          try {
+            isLoading = true;
+            const { data, error } = await supabase.auth.signUp({
+              email,
+              password,
+              options: {
+                data: { full_name: name },
+              },
+            });
+
+            if (error) throw new Error(error.message);
+
+            successMessage.style.display = "block";
+            e.target.reset();
+
+            setTimeout(() => {
+              toggleTabs("login");
+              successMessage.style.display = "none";
+            }, 2000);
+          } catch (error) {
+            errorMessage.textContent = error.message;
+            errorMessage.style.display = "block";
+          } finally {
+            isLoading = false;
+          }
+        });
+    </script>
+  </body>
+</html>
